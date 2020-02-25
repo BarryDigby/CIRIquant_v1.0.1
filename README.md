@@ -7,3 +7,5 @@ The ultimate goal is to:
   * Convert the bam files to fastq R1, fastq R2 files
   * Run the reads through CIRIquant
   * Store bams as cram, remove fastq files after use
+  
+Calculate computational cost if being sent to ICHEC
