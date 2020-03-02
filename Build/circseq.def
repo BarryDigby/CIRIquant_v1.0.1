@@ -4,7 +4,9 @@ MirrorURL:  http://us.archive.ubuntu.com/ubuntu/
 
 %labels
 	Install tools for running circ-seq v.1.0 on NUIG cluster. 
-  Successfully compiled 06/02/2020
+  	Successfully compiled 06/02/2020
+	02/03/2020:{
+	Adding java to def file to run Picard and CRAMtools}
 	 
 %post
 	apt-get update
@@ -15,7 +17,8 @@ MirrorURL:  http://us.archive.ubuntu.com/ubuntu/
 		unzip \
 		sudo \
 		vim \
-		software-properties-common
+		software-properties-common \
+		default-jdk
 
 	sudo add-apt-repository universe
 	sudo add-apt-repository restricted
