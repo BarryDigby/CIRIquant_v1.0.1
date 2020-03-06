@@ -59,34 +59,15 @@ ENV PYTHON_EGG_CACHE=/tmp
 
 # Start Fresh for Picard Tools
 
-FROM openjdk:8
-MAINTAINER Broad Institute DSDE <dsde-engineering@broadinstitute.org>
+FROM java:7
 
-ARG build_command=shadowJar
-ARG jar_name=picard.jar
+RUN apt-get update
+RUN apt-get install -y zip wget
 
-# Install ant, git for building
-RUN apt-get update && \
-    apt-get --no-install-recommends install -y --force-yes \
-        git \
-        r-base \
-        ant && \
-    apt-get clean autoclean && \
-    apt-get autoremove -y
+# We'll be working in /opt from now on
+WORKDIR /opt
+RUN wget https://github.com/broadinstitute/picard/releases/download/1.122/picard-tools-1.122.zip
+RUN unzip picard-tools-1.122.zip && rm -f picard-tools-1.122.zip
 
-# Assumes Dockerfile lives in root of the git repo. Pull source files into container
-COPY / /usr/picard/
-WORKDIR /usr/picard
-
-# Build the distribution jar, clean up everything else
-RUN ./gradlew ${build_command} && \
-    mv build/libs/${jar_name} picard.jar && \
-    ./gradlew clean && \
-    rm -rf src && \
-    rm -rf gradle && \
-    rm -rf .git && \
-    rm gradlew && \
-    rm build.gradle
-
-RUN mkdir /usr/working
-WORKDIR /usr/working
+# Link the picard tools to /opt/picard
+RUN ln -s picard-tools-1.122 picard
