@@ -2,9 +2,18 @@ FROM python:2.7-onbuild
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 
-RUN apt-get update && apt-get install -y unzip build-essential lib32z1-dev software-properties-common
+RUN apt-get update && \ 
+    apt-get install -y unzip \
+    build-essential \
+    lib32z1-dev \
+    software-properties-common \
+    default-jdk
 
 # download and extract all needed software
+
+RUN wget https://github.com/broadinstitute/picard/releases/download/2.0.1/picard-tools-2.0.1.zip
+RUN unzip picard-tools-2.0.1.zip && rm picard-tools-2.0.1.zip
+
 RUN wget https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.17.tar.bz2 
 RUN tar -xvf bwa-0.7.17.tar.bz2 && rm bwa-0.7.17.tar.bz2
 
@@ -21,6 +30,10 @@ RUN wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-2.0.3.tar.gz
 RUN tar -xvf stringtie-2.0.3.tar.gz && rm stringtie-2.0.3.tar.gz
 RUN wget https://github.com/samtools/htslib/archive/1.9.zip
 RUN unzip 1.9.zip && rm 1.9.zip
+
+# picard
+WORKDIR /usr/src/app/picard-tools-2.0.1
+RUN chmod 777 picard.jar && ln -s $(pwd)/picard.jar /bin
 
 # bwa
 WORKDIR /usr/src/app/bwa-0.7.17
@@ -56,23 +69,3 @@ RUN sed -i '113s/^/#/' /usr/local/lib/python2.7/site-packages/CIRIquant-1.0.1-py
 WORKDIR /usr/src/app
 CMD ["/bin/bash"]
 ENV PYTHON_EGG_CACHE=/tmp
-
-# Start Fresh for Picard Tools
-
-RUN \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  add-apt-repository -y ppa:webupd8team/java && \
-  apt-get update && \
-  apt-get install -y oracle-java8-installer && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/oracle-jdk8-installer
-
-
-RUN wget "https://github.com/broadinstitute/picard/releases/download/2.0.1/picard-tools-2.0.1.zip" && \
-    unzip picard-tools-2.0.1.zip && rm picard-tools-2.0.1.zip
-
-WORKDIR /usr/src/app/picard-tools-2.0.1
-RUN chmod 777 picard.jar && ln -s $(pwd)/picard.jar /bin
-
-# Define commonly used JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
