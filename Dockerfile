@@ -2,15 +2,23 @@ FROM python:2.7-onbuild
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 
-RUN apt-get update && \ 
-    apt-get install -y unzip \
-    build-essential \
-    lib32z1-dev \
-    software-properties-common \
-   
-RUN add-apt-repository ppa:linuxuprising/java
+RUN apt-get update && \
+	apt-get install -y unzip && \
+    apt-get openjdk-8-jdk && \
+	apt-get install -y ant && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /var/cache/oracle-jdk8-installer;
+	
+RUN apt-get update && \
+	apt-get install -y ca-certificates-java && \
+	apt-get clean && \
+	update-ca-certificates -f && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /var/cache/oracle-jdk8-installer;
 
-RUN apt-get install oracle-java11-installer
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
+RUN export JAVA_HOME
 
 # download and extract all needed software
 
@@ -33,10 +41,6 @@ RUN wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-2.0.3.tar.gz
 RUN tar -xvf stringtie-2.0.3.tar.gz && rm stringtie-2.0.3.tar.gz
 RUN wget https://github.com/samtools/htslib/archive/1.9.zip
 RUN unzip 1.9.zip && rm 1.9.zip
-
-# picard
-WORKDIR /usr/src/app/picard-tools-2.0.1
-RUN chmod 777 picard.jar && ln -s $(pwd)/picard.jar /bin
 
 # bwa
 WORKDIR /usr/src/app/bwa-0.7.17
