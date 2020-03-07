@@ -2,16 +2,12 @@ FROM python:2.7-onbuild
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 
-RUN apt-get update && \
-    apt-get install -y unzip \
-    software-properties-common \
-    sudo add-apt-repository -y ppa:webupd8team/java && \
-    apt-get install -y oracle-java8-installer && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /var/cache/oracle-jdk8-installer
 
-# Define commonly used JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+RUN apt-get update && apt-get install -y build-essential cmake zlib1g-dev libhdf5-dev git hdf5-tools software-properties-common
+RUN add-apt-repository -y ppa:webupd8team/java
+RUN apt-get update && apt-get install
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+RUN apt-get install -y oracle-java8-installer
 
 # download and extract all needed software
 
