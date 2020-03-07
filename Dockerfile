@@ -2,7 +2,7 @@ FROM python:2.7-onbuild
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 
-RUN apt-get update && apt-get install -y unzip
+RUN apt-get update && apt-get install -y unzip build-essential lib32z1-dev software-properties-common
 
 # download and extract all needed software
 RUN wget https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.17.tar.bz2 
@@ -59,15 +59,20 @@ ENV PYTHON_EGG_CACHE=/tmp
 
 # Start Fresh for Picard Tools
 
-FROM java:7
+RUN \
+  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+  add-apt-repository -y ppa:webupd8team/java && \
+  apt-get update && \
+  apt-get install -y oracle-java8-installer && \
+  rm -rf /var/lib/apt/lists/* && \
+  rm -rf /var/cache/oracle-jdk8-installer
 
-RUN apt-get update
-RUN apt-get install -y zip wget
 
-# We'll be working in /opt from now on
-WORKDIR /opt
-RUN wget https://github.com/broadinstitute/picard/releases/download/1.122/picard-tools-1.122.zip
-RUN unzip picard-tools-1.122.zip && rm -f picard-tools-1.122.zip
+RUN wget "https://github.com/broadinstitute/picard/releases/download/2.0.1/picard-tools-2.0.1.zip" && \
+    unzip picard-tools-2.0.1.zip && rm picard-tools-2.0.1.zip
 
-# Link the picard tools to /opt/picard
-RUN ln -s picard-tools-1.122 picard
+WORKDIR /usr/src/app/picard-tools-2.0.1
+RUN chmod 777 picard.jar && ln -s $(pwd)/picard.jar /bin
+
+# Define commonly used JAVA_HOME variable
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
