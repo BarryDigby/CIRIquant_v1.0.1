@@ -3,9 +3,9 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 
 
-RUN apt-get update && apt-get install -y build-essential cmake zlib1g-dev libhdf5-dev git hdf5-tools software-properties-common
+RUN apt-get update && apt-get install -y build-essential software-properties-common
 RUN add-apt-repository -y ppa:webupd8team/java
-RUN apt-get update && apt-get install
+RUN apt-get update
 RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
 RUN apt-get install -y oracle-java8-installer
 
