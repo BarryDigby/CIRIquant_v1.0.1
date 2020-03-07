@@ -7,7 +7,10 @@ RUN apt-get update && \
     build-essential \
     lib32z1-dev \
     software-properties-common \
-    openjdk-8-jre-headless
+   
+RUN add-apt-repository ppa:linuxuprising/java
+
+RUN apt-get install oracle-java11-installer
 
 # download and extract all needed software
 
