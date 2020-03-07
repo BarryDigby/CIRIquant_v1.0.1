@@ -7,7 +7,8 @@ RUN apt-get update && \
     build-essential \
     lib32z1-dev \
     software-properties-common \
-    default-jdk
+    openjdk-8-jdk \
+    openjdk-8-jre
 
 # download and extract all needed software
 
