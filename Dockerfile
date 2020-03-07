@@ -7,7 +7,11 @@ RUN apt-get update && \
     build-essential \
     lib32z1-dev \
     software-properties-common \
-    default-jdk
+
+RUN add-apt-repository ppa:linuxuprising/java
+
+RUN apt-get update && \
+    apt-get -y install oracle-java11-installer
 
 # download and extract all needed software
 
