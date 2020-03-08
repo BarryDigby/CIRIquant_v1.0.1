@@ -4,6 +4,9 @@ WORKDIR /usr/src/app
 
 RUN apt-get update && apt-get install -y unzip
 
+RUN wget https://codeload.github.com/arq5x/bedtools2/zip/master
+RUN unzip bedtools2-master.zip && rm bedtools2-master.zip
+
 RUN wget https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.17.tar.bz2 
 RUN tar -xvf bwa-0.7.17.tar.bz2 && rm bwa-0.7.17.tar.bz2
 
@@ -20,6 +23,10 @@ RUN wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-2.0.3.tar.gz
 RUN tar -xvf stringtie-2.0.3.tar.gz && rm stringtie-2.0.3.tar.gz
 RUN wget https://github.com/samtools/htslib/archive/1.9.zip
 RUN unzip 1.9.zip && rm 1.9.zip
+
+# bedtools
+WORKDIR /usr/src/app/bedtools2-master
+RUN make && ln -s $PWD/bin/* /bin
 
 # bwa
 WORKDIR /usr/src/app/bwa-0.7.17
