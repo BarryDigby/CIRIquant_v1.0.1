@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 RUN apt-get update && apt-get install -y unzip
 
-RUN https://github.com/arq5x/bedtools2/archive/master.zip
+RUN wget https://github.com/arq5x/bedtools2/archive/master.zip
 RUN unzip master.zip && rm master.zip
 
 RUN wget https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.17.tar.bz2 
