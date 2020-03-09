@@ -2,7 +2,7 @@ FROM python:2.7-onbuild
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 
-RUN apt-get update && apt-get install -y unzip
+RUN apt-get update && apt-get install -y unzip vim 
 
 RUN wget https://github.com/arq5x/bedtools2/archive/master.zip
 RUN unzip master.zip && rm master.zip
